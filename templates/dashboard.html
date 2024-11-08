@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UAV/UGV Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            height: 100vh;
+            background-color: #f4f4f9;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 1fr 3fr 1fr;
+            grid-template-rows: auto 1fr auto;
+            gap: 10px;
+            width: 80%;
+            max-width: 1200px;
+            height: 90vh;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .metadata, .controls {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .metadata {
+            grid-row: 1 / span 2;
+            background-color: #f0f4f8;
+            border-right: 1px solid #ddd;
+        }
+
+        .image-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            grid-column: 2;
+            grid-row: 1 / span 2;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 8px;
+        }
+
+        .controls {
+            grid-column: 1 / span 3;
+            background-color: #f8f8f8;
+            border-top: 1px solid #ddd;
+        }
+
+        .advance-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .advance-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <!-- Metadata section -->
+    <div class="metadata">
+        <h2>Terrain Data</h2>
+        <p><strong>Type:</strong> Desert</p>
+        <p><strong>Mock F-value:</strong> 57.4</p>
+        <p><strong>Altitude:</strong> 1200 meters</p>
+        <p><strong>Temperature:</strong> 35°C</p>
+    </div>
+
+    <!-- Centered Image -->
+    <div class="image-container">
+        <img src="/static/terrain_image.png" alt="Terrain Image"
+             width="1498"
+             height="auto"
+
+        >
+    </div>
+
+    <!-- Control Widget -->
+    <div class="controls">
+        <button class="advance-button" onclick="advanceUAV()">Advance UAV/UGV</button>
+    </div>
+</div>
+
+<script>
+    function advanceUAV() {
+        alert("UAV/UGV advanced!")
+    }
+</script>
+
+</body>
+</html>
