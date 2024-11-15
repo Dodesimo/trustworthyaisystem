@@ -4,71 +4,75 @@
     <meta charset="UTF-8">
     <title>UAV/UGV Dashboard</title>
     <style>
+        /* Original styling maintained */
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
             margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             height: 100vh;
-            background-color: #f4f4f9;
+            background-color: #f0f0f0;
         }
 
         .dashboard-container {
-            display: grid;
-            grid-template-columns: 1fr 3fr 1fr;
-            grid-template-rows: auto 1fr auto;
-            gap: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
             width: 80%;
             max-width: 1200px;
-            height: 90vh;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: #fff;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .metadata, .controls {
-            padding: 20px;
-            text-align: center;
         }
 
         .metadata {
-            grid-row: 1 / span 2;
-            background-color: #f0f4f8;
-            border-right: 1px solid #ddd;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #e3e3e3;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .metadata h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .metadata p {
+            font-size: 1.2em;
+            margin: 8px 0;
+            color: #555;
         }
 
         .image-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            grid-column: 2;
-            grid-row: 1 / span 2;
+            width: 100%;
+            text-align: center;
         }
 
         .image-container img {
-            max-width: 100%;
-            max-height: 100%;
+            width: 100%;
+            max-width: 800px;
+            height: auto;
             border-radius: 8px;
         }
 
         .controls {
-            grid-column: 1 / span 3;
-            background-color: #f8f8f8;
-            border-top: 1px solid #ddd;
+            margin-top: 20px;
+            text-align: center;
         }
 
         .advance-button {
+            font-size: 1em;
             padding: 10px 20px;
-            font-size: 16px;
-            background-color: #007bff;
             color: #fff;
+            background-color: #007bff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
         }
 
         .advance-button:hover {
@@ -79,33 +83,50 @@
 <body>
 
 <div class="dashboard-container">
-    <!-- Metadata section -->
     <div class="metadata">
-        <h2>Terrain Data</h2>
-        <p><strong>Type:</strong> Desert</p>
-        <p><strong>Mock F-value:</strong> 57.4</p>
-        <p><strong>Altitude:</strong> 1200 meters</p>
-        <p><strong>Temperature:</strong> 35°C</p>
+        <h2>Terrain and Performance Data</h2>
+        <p><strong>Terrain Type:</strong> <span id="terrain_type"></span></p>
+        <p><strong>AI Performance (F-score):</strong> <span id="ai_score"></span></p>
+        <p><strong>Human Performance (Accuracy):</strong> <span id="human_score"></span></p>
     </div>
-
-    <!-- Centered Image -->
     <div class="image-container">
-        <img src="/static/terrain_image.png" alt="Terrain Image"
-             width="1498"
-             height="auto"
-
-        >
+        <img src="/static/terrain_image.png" alt="Terrain Image">
     </div>
-
-    <!-- Control Widget -->
     <div class="controls">
         <button class="advance-button" onclick="advanceUAV()">Advance UAV/UGV</button>
     </div>
 </div>
 
 <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        fetchData();
+    });
+
+    function fetchData() {
+        fetch("/get_state")
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("terrain_type").innerText = data.terrain_type;
+                document.getElementById("ai_score").innerText = data.ai_score;
+                document.getElementById("human_score").innerText = data.human_score;
+            });
+    }
+
     function advanceUAV() {
-        alert("UAV/UGV advanced!")
+        fetch("/advance", { method: "POST" })
+            .then(response => response.json())
+            .then(data => {
+                if (data.action === "auto") {
+                    alert("Automatically advancing to the next node.");
+                    fetchData();  // Refresh data for the next node
+                } else if (data.action === "manual") {
+                    const userResponse = confirm("AI score is lower. Do you want to manually check for mines?");
+                    if (userResponse) {
+                        alert("Manual check in progress...");
+                        // Implement manual check logic here if needed
+                    }
+                }
+            });
     }
 </script>
 
